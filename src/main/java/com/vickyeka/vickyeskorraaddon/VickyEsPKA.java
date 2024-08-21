@@ -5,6 +5,7 @@ import com.projectkorra.projectkorra.ProjectKorra;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class VickyEsPKA extends JavaPlugin {
+    public static VickyEsPKA plugin;
 
     @Override
     public void onEnable() {
