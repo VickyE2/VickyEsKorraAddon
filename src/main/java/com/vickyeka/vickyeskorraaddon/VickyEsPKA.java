@@ -7,7 +7,6 @@ public class VickyEsPKA extends JavaPlugin {
     @Override
     public void onEnable() {
         // Initialization code here
-
     }
 
     @Override
