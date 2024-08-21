@@ -1,0 +1,8 @@
+name: VickyEsKorraAddon
+version: '${project.version}'
+main: com.vickyeka.vickyeskorraaddon.VickyEsKorraAddon
+api-version: '1.20'
+prefix: VU-PKA
+depend: [com.projectkorra.projectkorra]
+authors: [VickyE2, Eazzi1]
+description: An addon for Project Korra by VickyE
