@@ -6,8 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class VickyEsPKA extends JavaPlugin {
     @Override
     public void onEnable() {
-        // Initialization code here
-
+        // Initialization code here i think
     }
 
     @Override
