@@ -76,6 +76,7 @@
             <groupId>com.github.ProjectKorra</groupId>
             <artifactId>ProjectKorra</artifactId>
             <version>v1.11.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

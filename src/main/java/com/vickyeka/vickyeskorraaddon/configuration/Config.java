@@ -5,71 +5,100 @@ package com.vickyeka.vickyeskorraaddon.configuration;
 // (powered by FernFlower decompiler)
 //
 
-import com.projectkorra.projectkorra.ProjectKorra;
-import java.io.File;
-
-import com.vickyeka.vickyeskorraaddon.VickyEsPKA;
+import com.vickyeka.vickyeskorraaddon.VickyEsKorraAddon;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class Config {
-    private final VickyEsPKA plugin;
+import java.io.File;
+
+public class Config{
+
+    private final VickyEsKorraAddon plugin;
+
     private final File file;
     private final FileConfiguration config;
 
+    /**
+     * Creates a new {@link Config} with the file being the configuration file.
+     *
+     * @param file The file to create/load
+     */
     public Config(File file) {
-        this.plugin = VickyEsPKA.plugin;
-        this.file = new File(this.plugin.getDataFolder() + File.separator + file);
+        this(VickyEsKorraAddon.getPlugin().getDataFolder(), file);
+    }
+
+    public Config(File folder, File file) {
+        this.plugin = VickyEsKorraAddon.getPlugin();
+        this.file = new File(folder + File.separator + file);
         this.config = YamlConfiguration.loadConfiguration(this.file);
-        this.reload();
+        reload();
     }
 
+    /**
+     * Creates a file for the {@link FileConfiguration} object. If there are
+     * missing folders, this method will try to create them before create a file
+     * for the config.
+     */
     public void create() {
-        if (!this.file.getParentFile().exists()) {
+        if (!file.getParentFile().exists()) {
             try {
-                this.file.getParentFile().mkdir();
-                this.plugin.getLogger().info("Generating new directory for " + this.file.getName() + "!");
-            } catch (Exception var3) {
-                this.plugin.getLogger().info("Failed to generate directory!");
-                var3.printStackTrace();
+                file.getParentFile().mkdir();
+                plugin.getLogger().info("Generating new directory for " + file.getName() + "!");
+            }
+            catch (Exception e) {
+                plugin.getLogger().info("Failed to generate directory!");
+                e.printStackTrace();
             }
         }
 
-        if (!this.file.exists()) {
+        if (!file.exists()) {
             try {
-                this.file.createNewFile();
-                this.plugin.getLogger().info("Generating new " + this.file.getName() + "!");
-            } catch (Exception var2) {
-                this.plugin.getLogger().info("Failed to generate " + this.file.getName() + "!");
-                var2.printStackTrace();
+                file.createNewFile();
+                plugin.getLogger().info("Generating new " + file.getName() + "!");
+            }
+            catch (Exception e) {
+                plugin.getLogger().info("Failed to generate " + file.getName() + "!");
+                e.printStackTrace();
             }
         }
-
     }
 
+    /**
+     * Gets the {@link FileConfiguration} object from the {@link Config}.
+     *
+     * @return the file configuration object
+     */
     public FileConfiguration get() {
-        return this.config;
+        return config;
     }
 
+    /**
+     * Reloads the {@link FileConfiguration} object. If the config object does
+     * not exist it will run {@link #create()} first before loading the config.
+     */
     public void reload() {
-        this.create();
-
+        create();
         try {
-            this.config.load(this.file);
-        } catch (Exception var2) {
-            var2.printStackTrace();
+            config.load(file);
         }
-
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Saves the {@link FileConfiguration} object.
+     * {@code config.options().copyDefaults(true)} is called before saving the
+     * config.
+     */
     public void save() {
         try {
-            this.config.options().copyDefaults(true);
-            this.config.save(this.file);
-        } catch (Exception var2) {
-            var2.printStackTrace();
+            config.options().copyDefaults(true);
+            config.save(file);
         }
-
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
