@@ -1,17 +1,21 @@
 package com.vickyeka.vickyeskorraaddon;
 
 import com.projectkorra.projectkorra.Element;
-import com.projectkorra.projectkorra.ProjectKorra;
+import com.projectkorra.projectkorra.ability.CoreAbility;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class VickyEsPKA extends JavaPlugin {
-    public static VickyEsPKA plugin;
+import java.util.Arrays;
+
+public class VickyEsKorraAddon extends JavaPlugin {
+    public static VickyEsKorraAddon plugin;
+
 
     @Override
     public void onEnable() {
+        plugin = this;
         // Initialization code here I think
         getLogger().info("My plugin is geting hooked to korra >.<");
-        new Elements();
+        CoreAbility.registerAddonAbilities("com.vickyeka.vickyeskorraaddon.ability.tempestabilities");
     }
 
     @Override
@@ -23,6 +27,10 @@ public class VickyEsPKA extends JavaPlugin {
     public void onDisable() {
         // Cleanup code here
         getLogger().info("Well ig this is the end T-T");
+    }
+
+    public static VickyEsKorraAddon getInstance(){
+        return plugin;
     }
 }
 

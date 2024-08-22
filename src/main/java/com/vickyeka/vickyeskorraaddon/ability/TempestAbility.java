@@ -9,6 +9,8 @@ import com.projectkorra.projectkorra.util.ParticleEffect;
 import com.projectkorra.projectkorra.util.TempBlock;
 import com.vickyeka.vickyeskorraaddon.Elements;
 
+import com.vickyeka.vickyeskorraaddon.VickyEsKorraAddon;
+import com.vickyeka.vickyeskorraaddon.ability.tempestabilities.TempestBeamListener;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,6 +19,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Fire;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class TempestAbility extends ElementalAbility implements AddonAbility {
 
+
+    private Listener listener;
     private static final Map<Block, Player> SOURCE_PLAYERS = new ConcurrentHashMap<>();
 
     private static final Set<BlockFace> IGNITE_FACES;
@@ -36,7 +42,7 @@ public abstract class TempestAbility extends ElementalAbility implements AddonAb
     }
 
     public static boolean canTempestGrief() {
-        return getConfig().getBoolean("Properties.Tempest.TempestGriefing");
+        return getConfig().getBoolean("VickyEsKA.Tempest.CanTempestGrief");
 }
 
     public TempestAbility(Player player){
@@ -46,8 +52,6 @@ public abstract class TempestAbility extends ElementalAbility implements AddonAb
     public static boolean isIgnitable(Material material) {
         return material.isFlammable() || material.isBurnable();
     }
-
-
 
     public static boolean isIgnitable(Block block) {
         Block support = block.getRelative(BlockFace.DOWN);
@@ -74,73 +78,18 @@ public abstract class TempestAbility extends ElementalAbility implements AddonAb
         return SOURCE_PLAYERS;
     }
 
-    public void playTempestParticles(Location loc, int amount, double xOffset, double yOffset, double zOffset) {
-        ParticleEffect.FIREWORKS_SPARK.display(loc, amount, xOffset, yOffset, zOffset);
-        ParticleEffect.CRIT.display(loc, amount, xOffset, yOffset, zOffset);
-        ParticleEffect.END_ROD.display(loc, amount, xOffset, yOffset, zOffset);
-
-    }
-
-    public static void playTempestSound(Location loc) {
-        if (com.projectkorra.projectkorra.configuration.ConfigManager.getConfig().getBoolean("Properties.Tempest.PlaySound")) {
-            float volume = (float)com.projectkorra.projectkorra.configuration.ConfigManager.getConfig().getDouble("Properties.Tempest.TempestSound.Volume");
-            float pitch = (float)com.projectkorra.projectkorra.configuration.ConfigManager.getConfig().getDouble("Properties.Tempest.TempestSound.Pitch");
-            Sound sound = Sound.ITEM_TRIDENT_HIT_GROUND;
-
-            try {
-                sound = Sound.valueOf(com.projectkorra.projectkorra.configuration.ConfigManager.getConfig().getString("Properties.Tempest.TempestSound.Sound"));
-            } catch (IllegalArgumentException var8) {
-                ProjectKorra.log.warning("Your current value for 'Properties.Tempest.TempestSound.Sound' is not valid.");
-            } finally {
-                loc.getWorld().playSound(loc, sound, volume, pitch);
-            }
-        }
-
-    }
-
-    public void createTempFire(Location loc) {
-        this.createTempFire(loc, getConfig().getLong("Properties.Tempest.RevertTicks") + (long)((new Random()).nextDouble() * (double)getConfig().getLong("Properties.Fire.RevertTicks")));
-    }
-
-    public void createTempFire(Location loc, long time) {
-        if (isIgnitable(loc.getBlock())) {
-            new TempBlock(loc.getBlock(), createFireState(loc.getBlock(), this.getTempestType() == Material.SOUL_FIRE), time);
-            SOURCE_PLAYERS.put(loc.getBlock(), this.getPlayer());
-        }
-
-    }
-
-    public static BlockData createFireState(Block position, boolean blue) {
-        Fire fire = (Fire)Material.FIRE.createBlockData();
-        if (isIgnitable(position) && position.getRelative(BlockFace.DOWN).getType().isSolid()) {
-            return (BlockData)(blue ? Material.SOUL_FIRE.createBlockData() : fire);
-        } else {
-            Iterator var3 = IGNITE_FACES.iterator();
-
-            while(var3.hasNext()) {
-                BlockFace face = (BlockFace)var3.next();
-                fire.setFace(face, false);
-                if (isIgnitable(position.getRelative(face))) {
-                    fire.setFace(face, true);
-                }
-            }
-
-            return fire;
-        }
-    }
-
-    public Material getTempestType() {
-        return this.getBendingPlayer().canUseSubElement(Elements.BLUE_TEMPEST) ? Material.SOUL_FIRE : Material.FIRE;
-    }
 
     @Override
     public void load(){
 
+        listener = new TempestBeamListener();
+        VickyEsKorraAddon.plugin.getServer().getPluginManager().registerEvents(listener, VickyEsKorraAddon.plugin);
     }
 
     @Override
     public void stop(){
 
+        HandlerList.unregisterAll(listener);
     }
 
 }
