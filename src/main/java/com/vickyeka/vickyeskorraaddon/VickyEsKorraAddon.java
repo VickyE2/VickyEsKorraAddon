@@ -48,7 +48,6 @@ public class VickyEsKorraAddon extends JavaPlugin {
         AbilityTracker.listAbilitiesPresentFor(Elements.TEMPEST);
     }
 
-
     @Override
     public void onLoad(){
         getLogger().warning(ChatColor.GREEN + "[VU-PKA] " + ChatColor.GREEN +"Locked In mah boi");
