@@ -15,33 +15,32 @@ public class TempestBeamListener implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent event){
         if (event.getAction() == Action.RIGHT_CLICK_AIR) {
-            return;
-        }
-        Bukkit.getLogger().info("Event was a right click by listener TempestBeamListener.class");
+            Bukkit.getLogger().info("[VU-PKA] Player Right Clicked Air");
 
-        Action action = event.getAction();
-        Bukkit.getLogger().info("Action: " + action);
+            Player player = event.getPlayer();
+            BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
 
-        Bukkit.getLogger().info("[VU-PKA] Player Right Click Detected");
-        final Player player = event.getPlayer();
-        final BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(player);
+            if (bPlayer == null) {
+                Bukkit.getLogger().info("[VU-PKA] No Bending Player found");
+                return;
+            }
 
-        String currentAbility = bPlayer.getBoundAbilityName();
+            String currentAbility = bPlayer.getBoundAbilityName();
+            if (currentAbility == null || !currentAbility.equalsIgnoreCase("TempestBeam")) {
+                Bukkit.getLogger().info("[VU-PKA] Tempest Beam is not the bound ability");
+                return;
+            }
 
-        if (bPlayer == null) {
-            Bukkit.getLogger().info("[VU-PKA] There is no Bending Player");
-            return;
-        }
+            Bukkit.getLogger().info("[VU-PKA] Tempest Beam ability detected and being used");
 
-        if (currentAbility.equalsIgnoreCase("Tempest_Beam")) {
-            Bukkit.getLogger().info("[VU-PKA] Skill is Tempest Beam");
-            final TempestBeam tBeam = CoreAbility.getAbility(player, TempestBeam.class);
+            TempestBeam tBeam = new TempestBeam(player, player.getEyeLocation());
             if (tBeam != null) {
-                Bukkit.getLogger().info("[VU-PKA] Got Parameters");
-                tBeam.launchTempestBeam(player, event.getPlayer().getEyeLocation());
+                Bukkit.getLogger().info("[VU-PKA] Tempest Beam ability created");
+                // No need to manually start the ability; it should start on its own
             }
         }
+        else{
+            Bukkit.getLogger().info("[VU-PKA] Player didn't right click air");
+        }
     }
-
-
 }

@@ -3,11 +3,13 @@ package com.vickyeka.vickyeskorraaddon;
 import com.projectkorra.projectkorra.ability.CoreAbility;
 import com.vickyeka.vickyeskorraaddon.configuration.ConfigManager;
 import com.vickyeka.vickyeskorraaddon.listener.TempestBeamListener;
-import com.vickyeka.vickyeskorraaddon.utilities.AbilityCaller;
 import com.vickyeka.vickyeskorraaddon.utilities.AbilityTracker;
 import com.vickyeka.vickyeskorraaddon.utilities.ElementChecker;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import static com.vickyeka.vickyeskorraaddon.configuration.ConfigManager.readConfig;
+import static com.vickyeka.vickyeskorraaddon.utilities.EffectChecker.listParticleEffectsPresent;
 
 public class VickyEsKorraAddon extends JavaPlugin {
     public static VickyEsKorraAddon plugin;
@@ -40,13 +42,14 @@ public class VickyEsKorraAddon extends JavaPlugin {
             return true;
         });
 
-        AbilityCaller.Call("Tempest_Beam");
-
         // Check if Addon Elements and Abilities is loaded
-        ElementChecker.checkElementPresence();
-        ElementChecker.listElementsPresent();
-        AbilityTracker.listAbilitiesPresentFor(Elements.TEMPEST);
-    }
+        if (readConfig().getBoolean("debug.isEnabled") == true){
+            ElementChecker.checkElementPresence();
+            ElementChecker.listElementsPresent();
+            AbilityTracker.listAbilitiesPresentFor(Elements.TEMPEST);
+            listParticleEffectsPresent();
+        }
+       }
 
     @Override
     public void onLoad(){

@@ -20,11 +20,12 @@ public class ConfigManager {
 
         config.addDefault("VickyEsKA.Tempest.CanTempestGrief", true);
         config.addDefault("VickyEsKA.Tempest.ChatColor", "GOLD");
+        config.addDefault("debug.isEnabled", false);
         config.options().copyDefaults(true);
         vupkaConfig.save();
     }
 
-    public static FileConfiguration getConfig() {
+    public static FileConfiguration readConfig() {
         return vupkaConfig.get();
     }
 

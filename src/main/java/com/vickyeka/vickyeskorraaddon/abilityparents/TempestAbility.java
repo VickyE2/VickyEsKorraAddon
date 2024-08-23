@@ -6,6 +6,8 @@ import com.projectkorra.projectkorra.ability.ElementalAbility;
 import com.vickyeka.vickyeskorraaddon.Elements;
 import org.bukkit.entity.Player;
 
+import static com.vickyeka.vickyeskorraaddon.configuration.ConfigManager.readConfig;
+
 
 public abstract class TempestAbility extends ElementalAbility implements AddonAbility {
 
@@ -18,7 +20,7 @@ public abstract class TempestAbility extends ElementalAbility implements AddonAb
     }
 
     public static boolean canTempestGrief() {
-        return getConfig().getBoolean("VickyEsKA.Tempest.CanTempestGrief");
+        return readConfig().getBoolean("VickyEsKA.Tempest.CanTempestGrief");
 }
 
     public TempestAbility(Player player){
